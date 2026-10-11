@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.vite/
+
+# 本地工作记忆，不纳入公开仓库
+.workbuddy/
