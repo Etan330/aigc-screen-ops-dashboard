@@ -765,7 +765,7 @@ export function computeDeviceStatuses(
         heartbeatRate7d: safeDiv(actual, expected),
         incidents,
         lastIncidentText: lastInc
-          ? `${lastInc.start.slice(5, 16)} 起中断 ${Math.round(lastInc.minutes)} 分钟`
+          ? `${lastInc.start.slice(5, 10)} ${lastInc.start.slice(11, 16)} 起中断 ${Math.round(lastInc.minutes)} 分钟`
           : '近 15 日无心跳中断',
         tasksInPeriod: g?.total ?? 0,
         failedInPeriod: g?.failed ?? 0,

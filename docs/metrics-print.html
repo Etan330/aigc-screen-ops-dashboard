@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>AIGC 互动大屏运营看板 · 指标口径说明</title>
+<style>
+  @page { size: A4 portrait; margin: 9mm 8mm 8mm 8mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: #1f2329;
+    font-size: 7.6pt;
+    line-height: 1.34;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  h1 { font-size: 13.6pt; margin: 0 0 3pt; letter-spacing: .2px; }
+  h2 {
+    font-size: 9.2pt; margin: 6.5pt 0 3pt; padding: 2pt 5pt;
+    background: #eef2fd; border-left: 2.4pt solid #2f5be3; color: #1b3aab;
+  }
+  h3 { font-size: 8.3pt; margin: 5pt 0 3pt; }
+  p { margin: 2.4pt 0; }
+  strong { color: #1f2329; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 7.0pt; background: #f2f4f7; padding: 0 1.5pt; border-radius: 2pt;
+  }
+  table {
+    width: 100%; border-collapse: collapse; margin: 2.5pt 0 0;
+    table-layout: fixed;
+  }
+  th {
+    background: #f4f6fa; color: #48505a; font-weight: 600;
+    text-align: left; padding: 3pt 3.6pt; border: 0.5pt solid #d9dee5;
+  }
+  td {
+    padding: 3pt 3.6pt; border: 0.5pt solid #e3e7ec; vertical-align: top;
+  }
+  tbody tr:nth-child(even) td { background: #fbfcfd; }
+  ol { margin: 2.5pt 0 0; padding-left: 12pt; }
+  li { margin-bottom: 1.6pt; }
+  table th:nth-child(1), table td:nth-child(1) { font-weight: 600; }
+  table#metrics th:nth-child(1), table#metrics td:nth-child(1) { width: 10.5%; }
+  table#metrics th:nth-child(2), table#metrics td:nth-child(2) { width: 19%; }
+  table#metrics th:nth-child(3), table#metrics td:nth-child(3) { width: 24%; }
+  table#metrics th:nth-child(4), table#metrics td:nth-child(4) { width: 16%; }
+  table#rules th:nth-child(1), table#rules td:nth-child(1) { width: 14.5%; }
+  table#rules th:nth-child(2), table#rules td:nth-child(2) { width: 8.5%; }
+  table#bounds th:nth-child(1), table#bounds td:nth-child(1) { width: 24%; }
+</style>
+</head>
+<body>
+<h1>AIGC 互动大屏运营看板 · 指标口径说明</h1>
+<p><strong>统计对象</strong>　全部指标从同一套事件级模拟数据派生（<code>public/data/mock_events.json</code>），任何图表、卡片、详情页均不写死结果，因此同一指标在不同页面数值必然一致。</p>
+<p><strong>时间归属</strong>　参与事件与生成任务按<strong>事件自身日期</strong>归属；内容、审核、扫码、分享统一归因到<strong>内容生成日</strong>，保证「生成成功 → 审核通过 → 扫码 → 分享」四步口径可比。</p>
+<p><strong>有效内容</strong>　生成成功 <strong>且</strong> 审核通过的内容 = 可扫码、可分享的内容；审核中与已拒绝不进入扫码 / 分享转化率的分母。</p>
+<p><strong>分母为零</strong>　所有比率返回「—」，不显示 0 或 NaN。</p>
+<h2>一、核心指标</h2>
+<table id="metrics">
+<thead><tr><th>指标</th><th>定义</th><th>计算口径（分子 / 分母与去重规则）</th><th>运营意义</th><th>指标异常时的行动</th></tr></thead>
+<tbody>
+<tr><td>参与人数</td><td>统计期内发起参与事件的去重用户数</td><td><code>count(distinct userId)</code>；跨点位重复用户只计一次</td><td>活动拉新规模与点位吸引力</td><td>下滑：查点位客流、活动物料、设备是否离线；上升但转化未升：先修转化链路，不要继续加量</td></tr>
+<tr><td>AI 生成成功率</td><td>成功生成占<strong>已完成</strong>生成尝试的比例</td><td>成功任务数 /（成功 + 失败）；<strong>生成中不入分母</strong></td><td>技术链路健康度，&lt; 90% 触发 R1</td><td>按设备下钻定位故障机；按失败原因派单：超时 → 运维查网络与服务端，参数异常 → 前端查模板下发；必要时临时下线异常设备分流</td></tr>
+<tr><td>扫码转化率</td><td>至少扫码一次的有效内容占比</td><td>去重扫码内容数 / 可扫码有效内容数；<strong>同一内容多次扫码只计一次</strong></td><td>内容是否真的被用户带走</td><td>检查屏幕二维码的尺寸、位置、亮度与引导文案并做 A/B 对照；核对扫码后落地页加载成功率；核查成图质量</td></tr>
+<tr><td>分享转化率</td><td>至少成功分享一次的有效内容占比</td><td>去重成功分享内容数 / 可分享有效内容数；<strong>分享失败不入分子</strong></td><td>内容传播与外溢效果</td><td>优化分享话术与默认文案；对高分享风格加大曝光；低分享点位做现场引导改造</td></tr>
+<tr><td>平均生成时长</td><td>成功任务的生成耗时均值</td><td><code>mean(durationMs)</code>，仅含成功任务；同时看 P95 与超 15s 占比</td><td>用户等待体验，&gt; 15s 触发 R2</td><td>P95 远高于均值：优化排队与长尾；全点位同步变慢：查点位网络 / 边缘节点；单台变慢：查该设备硬件</td></tr>
+<tr><td>内容审核通过率</td><td>通过占<strong>已完成审核</strong>内容的比例</td><td>通过数 /（通过 + 拒绝）；<strong>待审核不入分母</strong></td><td>内容治理健康度，拒绝率 &gt; 10% 触发 R3</td><td>按风格定位：集中在单一风格则下线或调整该风格模板与提示词；全域上升则人工复核是否策略误杀，反馈审核策略侧</td></tr>
+<tr><td>设备在线率</td><td>最近 5 分钟内有有效心跳的设备占比</td><td>心跳距基准时间 ≤ 5 分钟的设备数 / 设备总数；<strong>实时口径，不随日期筛选变化</strong></td><td>点位可用性，直接决定参与与生成量</td><td>离线超 60 分钟：派单现场检修；同点位多台离线：按点位网络故障上报；恢复后复核心跳连续性与当日成功率</td></tr>
+</tbody></table>
+<h2>二、异常规则与阈值</h2>
+<p>阈值集中定义在 <code>src/lib/config.ts</code>，属于<strong>演示规则</strong>，修改后全站判定结果自动重算，页面底部同步展示当前取值。</p>
+<table id="rules">
+<thead><tr><th>规则</th><th>粒度</th><th>触发条件（含样本量下限）</th><th>运营动作</th></tr></thead>
+<tbody>
+<tr><td>R1 生成成功率</td><td>点位·日</td><td>&lt; 90% 且当日已完成生成尝试 ≥ 20 次；&lt; 80% 升级为「严重」</td><td>下钻同点位各设备定位故障机，按失败原因分派给技术运维或前端</td></tr>
+<tr><td>R2 平均生成时长</td><td>点位·日</td><td>&gt; 15s 且当日成功任务 ≥ 20 次；&gt; 25s 升级为「严重」</td><td>对比同点位各设备与全网均值，区分点位级问题与服务端容量问题</td></tr>
+<tr><td>R3 审核拒绝率</td><td>点位·日</td><td>&gt; 10% 且当日已审核内容 ≥ 20 条；&gt; 20% 升级为「严重」</td><td>按创作风格与拒绝原因定位，调整模板或反馈给审核策略侧</td></tr>
+<tr><td>R4 设备离线</td><td>设备·实时</td><td>最近心跳距基准时间 &gt; 5 分钟；&gt; 60 分钟升级为「严重」</td><td>联系现场确认通电与网络；超过 1 小时派单检修</td></tr>
+<tr><td>R5 扫码转化异常（扩展规则）</td><td>设备·区间</td><td>扫码转化率 &lt; 大盘 50% 且可扫码有效内容 ≥ 30 条</td><td>现场巡检二维码展示与引导文案，做 A/B 对照，并核对落地页加载</td></tr>
+</tbody></table>
+<p>样本量下限的作用是避免小样本误报（例如当日只有 3 次尝试、失败 1 次就显示 66%）。</p>
+<h2>三、边界处理</h2>
+<table id="bounds">
+<thead><tr><th>情况</th><th>处理方式</th></tr></thead>
+<tbody>
+<tr><td>分母为 0</td><td>返回「—」</td></tr>
+<tr><td>生成中任务 / 待审核内容</td><td>分别不进入成功率、审核通过率分母；内容不可扫码 / 分享</td></tr>
+<tr><td>审核拒绝内容</td><td>不进入转化率分母，单独统计拒绝原因</td></tr>
+<tr><td>同一内容多次扫码 / 分享</td><td>内容级去重，只计一次</td></tr>
+<tr><td>分享失败</td><td>不进入分享转化率分子，单独统计失败次数</td></tr>
+<tr><td>跨点位重复用户</td><td>全局去重只计一次，KPI 卡提示已去重人数</td></tr>
+<tr><td>跨日期任务 / 空区间</td><td>按事件自身日期归属；空区间显示空状态与「—」</td></tr>
+</tbody></table>
+<h2>四、口径红线</h2>
+<ol><li><strong>生成失败 ≠ 审核拒绝。</strong> 前者是技术链路问题（派单技术运维），后者是内容治理问题（反馈审核策略），分母、归因与责任人都不同，不得合并成「内容没出来」一个口径。</li><li><strong>漏斗不混算。</strong> 用户层统计「去重人数」，内容层统计「内容条数」，两层分开呈现；人均任务数、单内容扫码次数等过程量单独列出，不进入转化率。</li><li><strong>不把假设说成结论。</strong> 异常详情中的「可能的原因」一律标注为<strong>待验证假设</strong>，需结合设备日志、服务端监控或现场巡检验证。</li></ol>
+</body>
+</html>
