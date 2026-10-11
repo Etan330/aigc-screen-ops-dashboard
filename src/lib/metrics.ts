@@ -659,25 +659,24 @@ export interface DeviceStatus {
   avgDurationInPeriod: number | null;
 }
 
+/**
+ * 单日「应到心跳」时间点列表：运营时段 09:30-22:00（Asia/Shanghai），
+ * 按固定间隔切片，并裁剪到 [fromTs, toTs] 区间内。
+ *
+ * 注意：这里必须直接构造带 +08:00 的时刻，不能用
+ * `new Date(day+'T00:00:00+08:00').setUTCHours(9-8, 30)` 这类写法——
+ * 那样会把 09:30 落到前一天，导致应到心跳数为 0。
+ */
 function operatingSlots(day: string, fromTs: string, toTs: string | null, intervalMin: number): string[] {
-  // 运营时段 09:30-22:00，切片到 [fromTs, toTs] 之间
-  const [oh, om] = [9, 30];
-  const [ch, cm] = [22, 0];
-  const start = new Date(`${day}T00:00:00+08:00`);
-  start.setUTCHours(oh - 8, om, 0, 0); // +08:00 下的 09:30
-  const end = new Date(`${day}T00:00:00+08:00`);
-  end.setUTCHours(ch - 8, cm, 0, 0);
+  const dayStart = new Date(`${day}T09:30:00+08:00`).getTime();
+  const dayEnd = new Date(`${day}T22:00:00+08:00`).getTime();
   const from = parseTs(fromTs).getTime();
   const to = toTs ? parseTs(toTs).getTime() : Number.MAX_SAFE_INTEGER;
   const out: string[] = [];
-  let cur = start.getTime();
-  while (cur <= end.getTime()) {
-    if (cur >= from && cur <= to) {
-      const d = new Date(cur);
-      const s = new Date(d.getTime() + 8 * 3600_000).toISOString();
-      out.push(`${s.slice(0, 10)}T${s.slice(11, 19)}`);
-    }
-    cur += intervalMin * 60_000;
+  for (let cur = dayStart; cur <= dayEnd; cur += intervalMin * 60_000) {
+    if (cur < from || cur > to) continue;
+    const s = new Date(cur + 8 * 3600_000).toISOString();
+    out.push(`${s.slice(0, 10)}T${s.slice(11, 19)}`);
   }
   return out;
 }
@@ -728,9 +727,10 @@ export function computeDeviceStatuses(
         const iso = new Date(t + 8 * 3600_000).toISOString().slice(0, 10);
         days.add(iso);
       }
+      // 应到与实到必须用同一个时间窗（window7dStart ~ baseline），否则比率会被高估/低估
       let expected = 0;
       for (const day of days) {
-        expected += operatingSlots(day, `${day}T00:00:00`, baseline, interval).length;
+        expected += operatingSlots(day, window7dStart, baseline, interval).length;
       }
       const actual = beats.filter((b) => b >= window7dStart).length;
 

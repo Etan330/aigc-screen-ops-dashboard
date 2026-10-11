@@ -37,7 +37,3 @@ export function buildDicts(meta: Meta): Dicts {
     rejectReasons: toMap(meta.dictionaries.rejectReasons),
   };
 }
-
-export function dictLabel(dict: Map<string, string>, key: string): string {
-  return dict.get(key) ?? key;
-}

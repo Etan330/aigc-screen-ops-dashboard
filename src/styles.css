@@ -463,6 +463,8 @@ button {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+  /* 同一行内高度不同的卡片各自保持自身高度，内容不会被拉伸或溢出 */
+  align-items: start;
 }
 
 .grid-3 {
@@ -471,16 +473,9 @@ button {
   gap: 12px;
 }
 
-.grid-2-1 {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: 12px;
-}
-
 @media (max-width: 1100px) {
   .grid-2,
-  .grid-3,
-  .grid-2-1 {
+  .grid-3 {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -590,6 +585,22 @@ button {
   font-size: 11.5px;
   color: var(--c-text-weak);
   margin-top: 2px;
+  /* 允许在窄屏换行，避免长提示把卡片撑破或溢出 */
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 6px;
+  row-gap: 1px;
+}
+
+.funnel-note-rate {
+  color: var(--c-text-sub);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.funnel-note-hint {
+  min-width: 0;
+  flex: 1 1 240px;
 }
 
 .funnel-divider {
@@ -615,6 +626,25 @@ button {
 
 .table-wrap {
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+/* 窄屏下表格横向滚动条做得更轻，避免看起来像"错位" */
+.table-wrap::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb {
+  background: #d3d8de;
+  border-radius: 4px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb:hover {
+  background: #b9c0c8;
+}
+
+.table-wrap::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 table.data-table {
@@ -651,6 +681,36 @@ table.data-table tbody tr.clickable {
 
 .num {
   font-variant-numeric: tabular-nums;
+}
+
+/* 异常详情里的「设备 / 风格对比」表：用百分比列宽，窄屏下也不会横向溢出抽屉 */
+table.data-table.compare-table {
+  table-layout: fixed;
+}
+
+table.data-table.compare-table th:nth-child(1),
+table.data-table.compare-table td:nth-child(1) {
+  width: 27%;
+}
+
+table.data-table.compare-table th:nth-child(2),
+table.data-table.compare-table td:nth-child(2) {
+  width: 24%;
+}
+
+table.data-table.compare-table th:nth-child(3),
+table.data-table.compare-table td:nth-child(3) {
+  width: 18%;
+}
+
+/* 数值列不折行，"32.3%" 这类短数值不应被拆成两行 */
+table.data-table.compare-table td:nth-child(2) {
+  white-space: nowrap;
+}
+
+table.data-table.compare-table td {
+  white-space: normal;
+  word-break: break-word;
 }
 
 /* --------------------------------- 徽标 ---------------------------------- */

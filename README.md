@@ -88,6 +88,10 @@
 
 ![设备运行监控](docs/screenshots/06-devices.jpg)
 
+点击任意设备可打开详情抽屉，查看心跳时间线与中断记录：
+
+![设备详情](docs/screenshots/07-device-detail.jpg)
+
 **在线状态是实时口径**：只相对模拟数据的基准时间判定，不随历史日期筛选变化，避免用历史区间误判「现在哪台设备离线」。
 
 ### 6. 异常监控与定位
@@ -108,6 +112,8 @@
 4. **原始样例**：直接取自定义原始数据的具体记录（任务 ID、时间、设备、原因），可逐条回溯；
 5. **可能的原因**：全部明确标注为**待验证假设**，不把数据间接支持的判断写成已确认根因；
 6. **运营建议与下一步排查方向**。
+
+![异常列表](docs/screenshots/04-anomaly-list.jpg)
 
 ![异常详情](docs/screenshots/05-anomaly-detail.jpg)
 
@@ -188,7 +194,7 @@ npm run dev
 # 其他命令
 npm run build      # 类型检查 + 生产构建，产物在 dist/
 npm run preview    # 本地预览生产构建
-npm test           # 运行 24 项自动化测试
+npm test           # 运行 25 项自动化测试
 npm run typecheck  # 仅类型检查
 ```
 
@@ -211,7 +217,7 @@ npm run typecheck  # 仅类型检查
     │   ├── metrics.ts                     指标计算：全部从事件级数据派生
     │   ├── anomalies.ts                   异常规则引擎与证据下钻
     │   ├── time.ts / data.ts / format.ts  时间、数据加载与格式化工具
-    │   └── *.test.ts                      24 项自动化测试
+    │   └── *.test.ts                      25 项自动化测试
     ├── components/                        筛选栏、KPI、四个业务区、案例、抽屉等 12 个组件
     ├── App.tsx / main.tsx                 应用入口与状态编排
     └── styles.css                         统一视觉样式

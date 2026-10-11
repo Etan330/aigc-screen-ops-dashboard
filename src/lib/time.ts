@@ -31,20 +31,6 @@ export function diffDays(a: string, b: string): number {
   return Math.round((db - da) / 86_400_000);
 }
 
-/** 生成 [startDate, endDate] 之间的全部日期（含两端） */
-export function enumerateDays(range: DateRange): string[] {
-  const out: string[] = [];
-  let cur = range.startDate;
-  // 防御：异常入参导致死循环
-  let guard = 0;
-  while (cur <= range.endDate && guard < 400) {
-    out.push(cur);
-    cur = addDays(cur, 1);
-    guard += 1;
-  }
-  return out;
-}
-
 /** 区间天数（含两端） */
 export function rangeLength(range: DateRange): number {
   return Math.max(0, diffDays(range.startDate, range.endDate)) + 1;
@@ -63,11 +49,6 @@ export function minutesBetween(fromTs: string, toTs: string): number {
 /** 2026-10-11 -> 10-11 */
 export function shortDay(day: string): string {
   return day.slice(5);
-}
-
-/** 2026-10-11T20:00:00 -> 10-11 20:00 */
-export function shortTs(ts: string): string {
-  return `${ts.slice(5, 10)} ${ts.slice(11, 16)}`;
 }
 
 /** 2026-10-11T20:00:00 -> 2026-10-11 20:00 */

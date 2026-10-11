@@ -59,11 +59,8 @@ function FunnelView({ model }: { model: FunnelModel }) {
               />
             </div>
             <div className="funnel-note">
-              <span style={{ color: 'var(--c-text-sub)', fontWeight: 600 }}>
-                占本层首步 {fmtPct(ratio)}
-              </span>
-              <span style={{ margin: '0 6px', color: 'var(--c-border-strong)' }}>|</span>
-              {s.hint}
+              <span className="funnel-note-rate">占本层首步 {fmtPct(ratio)}</span>
+              <span className="funnel-note-hint">{s.hint}</span>
             </div>
           </div>
         );
@@ -84,8 +81,8 @@ function FunnelView({ model }: { model: FunnelModel }) {
         ))}
       </div>
       <div style={{ marginTop: 8, fontSize: 11.5, color: 'var(--c-text-weak)' }}>
-        口径说明：用户层统计「去重人数」，内容层统计「内容条数」，两层不混合计算转化率；
-        人均生成任务数、单内容扫码次数等过程量单独在上方展示，不进入漏斗。
+        <div>口径说明：用户层统计「去重人数」，内容层统计「内容条数」，两层不混合计算转化率。</div>
+        <div>人均生成任务数、单内容扫码次数等过程量单独在上方展示，不进入漏斗。</div>
       </div>
     </div>
   );
@@ -182,7 +179,7 @@ export default function ActivitySection({
           height={250}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
+            <AreaChart data={chartData} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="gradPart" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={COLORS.primary} stopOpacity={0.32} />
@@ -191,7 +188,7 @@ export default function ActivitySection({
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#eef0f3" vertical={false} />
               <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#8a9099' }} minTickGap={16} />
-              <YAxis tick={{ fontSize: 11, fill: '#8a9099' }} width={44} />
+              <YAxis tick={{ fontSize: 11, fill: '#8a9099' }} width={48} />
               <Tooltip
                 content={
                   <ChartTooltip
@@ -222,16 +219,16 @@ export default function ActivitySection({
           height={250}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={chartData} margin={{ top: 8, right: 12, left: -10, bottom: 0 }}>
+            <ComposedChart data={chartData} margin={{ top: 10, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#eef0f3" vertical={false} />
               <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#8a9099' }} minTickGap={16} />
-              <YAxis yAxisId="left" tick={{ fontSize: 11, fill: '#8a9099' }} width={44} />
+              <YAxis yAxisId="left" tick={{ fontSize: 11, fill: '#8a9099' }} width={48} />
               <YAxis
                 yAxisId="right"
                 orientation="right"
                 domain={[60, 100]}
                 tick={{ fontSize: 11, fill: '#8a9099' }}
-                width={48}
+                width={52}
                 unit="%"
               />
               <Tooltip
@@ -269,7 +266,7 @@ export default function ActivitySection({
           title="参与 → 生成 → 审核 → 扫码 / 分享"
           subtitle="分层漏斗：用户层（人数）与内容层（内容数）分开统计"
           isEmpty={funnel.contentTier.steps[0].value === 0}
-          height={392}
+          height="auto"
         >
           <FunnelView model={funnel} />
         </ChartCard>
@@ -281,8 +278,8 @@ export default function ActivitySection({
           height={392}
           note={
             <div style={{ fontSize: 11.5, color: 'var(--c-text-weak)' }}>
-              点击条形或下方表格行可下钻到该点位。若某点位参与量高但扫码 / 分享明显偏低，
-              可在下方点位明细中对比各设备转化率，异常会在「异常监控」中以 R5 规则给出提示。
+              <div>点击条形或下方表格行可下钻到该点位。</div>
+              <div>若某点位参与量高但扫码 / 分享明显偏低，可在下方点位明细中对比各设备转化率，异常会在「异常监控」中以 R5 规则给出提示。</div>
             </div>
           }
         >
@@ -290,7 +287,7 @@ export default function ActivitySection({
             <BarChart
               data={siteChartData}
               layout="vertical"
-              margin={{ top: 8, right: 56, left: 8, bottom: 0 }}
+              margin={{ top: 8, right: 68, left: 4, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#eef0f3" horizontal={false} />
               <XAxis type="number" tick={{ fontSize: 11, fill: '#8a9099' }} />

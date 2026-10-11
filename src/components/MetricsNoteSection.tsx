@@ -58,8 +58,7 @@ export default function MetricsNoteSection() {
               <BookOpen size={14} /> 指标口径与边界说明
             </h3>
             <p className="card-sub">
-              所有指标均从同一套事件级原始数据派生；时间归属：参与与生成按事件自身日期，
-              内容 / 审核 / 扫码 / 分享统一归因到内容生成日
+              所有指标均从同一套事件级原始数据派生；时间归属：参与与生成按事件自身日期，内容 / 审核 / 扫码 / 分享统一归因到内容生成日
             </p>
           </div>
           <button className="btn" onClick={() => setOpen(!open)}>

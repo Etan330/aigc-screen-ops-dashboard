@@ -8,7 +8,12 @@ export interface ChartCardProps {
   subtitle?: string;
   note?: ReactNode;
   extra?: ReactNode;
-  height?: number;
+  /**
+   * 图表区高度（px）。
+   * 传入 'auto' 时不再固定高度，由内容自行撑开——用于漏斗等「非图表」内容，
+   * 避免内容超出固定高度后溢出卡片、压住下方模块。
+   */
+  height?: number | 'auto';
   isEmpty?: boolean;
   emptyText?: string;
   children: ReactNode;
@@ -24,6 +29,9 @@ export function ChartCard({
   emptyText = '当前筛选条件下没有数据',
   children,
 }: ChartCardProps) {
+  const autoHeight = height === 'auto';
+  const boxStyle = autoHeight ? undefined : { height };
+
   return (
     <div className="card">
       <div className="card-head">
@@ -35,12 +43,12 @@ export function ChartCard({
       </div>
       <div className="card-body">
         {isEmpty ? (
-          <div className="empty" style={{ height }}>
+          <div className="empty" style={autoHeight ? { minHeight: 200 } : { height }}>
             <Inbox className="icon" size={26} />
             <div>{emptyText}</div>
           </div>
         ) : (
-          <div style={{ height }}>{children}</div>
+          <div style={boxStyle}>{children}</div>
         )}
         {note ? <div style={{ padding: '0 4px', marginTop: 6 }}>{note}</div> : null}
       </div>
@@ -66,21 +74,6 @@ export function StatusDot({ online }: { online: boolean }) {
   );
 }
 
-/* --------------------------------- 图例 ---------------------------------- */
-
-export function Legend({ items }: { items: { label: string; color: string }[] }) {
-  return (
-    <div className="legend-inline">
-      {items.map((i) => (
-        <span className="item" key={i.label}>
-          <span className="legend-dot" style={{ background: i.color }} />
-          {i.label}
-        </span>
-      ))}
-    </div>
-  );
-}
-
 /* ------------------------------- 图表 Tooltip ----------------------------- */
 
 export interface TooltipPayloadItem {
@@ -97,7 +90,6 @@ export interface ChartTooltipProps {
   label?: string | number;
   labelFormatter?: (label: string | number | undefined) => string;
   valueFormatter?: (value: number | null, key: string) => string;
-  hiddenKeys?: string[];
 }
 
 export function ChartTooltip({
@@ -106,30 +98,24 @@ export function ChartTooltip({
   label,
   labelFormatter,
   valueFormatter,
-  hiddenKeys = [],
 }: ChartTooltipProps) {
   if (!active || !payload || payload.length === 0) return null;
   return (
     <div className="chart-tooltip">
       <div className="t-title">{labelFormatter ? labelFormatter(label) : String(label ?? '')}</div>
-      {payload
-        .filter((p) => !hiddenKeys.includes(String(p.dataKey ?? p.name ?? '')))
-        .map((p, i) => {
-          const key = String(p.dataKey ?? p.name ?? '');
-          const raw = typeof p.value === 'number' ? p.value : null;
-          return (
-            <div className="t-row" key={`${key}-${i}`}>
-              <span>
-                <span
-                  className="legend-dot"
-                  style={{ background: p.color ?? '#2f5be3', marginRight: 6 }}
-                />
-                {p.name}
-              </span>
-              <b>{valueFormatter ? valueFormatter(raw, key) : String(p.value ?? '—')}</b>
-            </div>
-          );
-        })}
+      {payload.map((p, i) => {
+        const key = String(p.dataKey ?? p.name ?? '');
+        const raw = typeof p.value === 'number' ? p.value : null;
+        return (
+          <div className="t-row" key={`${key}-${i}`}>
+            <span>
+              <span className="legend-dot" style={{ background: p.color ?? '#2f5be3', marginRight: 6 }} />
+              {p.name}
+            </span>
+            <b>{valueFormatter ? valueFormatter(raw, key) : String(p.value ?? '—')}</b>
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -28,12 +28,12 @@ function ComparisonView({ detail }: { detail: AnomalyDetail }) {
       </div>
       <div className="card-body">
         <div className="table-wrap">
-          <table className="data-table">
+          <table className="data-table compare-table">
             <thead>
               <tr>
                 <th>对象</th>
-                <th style={{ width: 110 }}>指标值</th>
-                <th style={{ width: 200 }}>对比</th>
+                <th>指标值</th>
+                <th>对比</th>
                 <th>说明</th>
               </tr>
             </thead>

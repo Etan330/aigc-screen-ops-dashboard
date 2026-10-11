@@ -96,10 +96,10 @@ export default function QualitySection({
           height={250}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={rateData} margin={{ top: 8, right: 12, left: -14, bottom: 0 }}>
+            <ComposedChart data={rateData} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#eef0f3" vertical={false} />
               <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#8a9099' }} minTickGap={16} />
-              <YAxis domain={[50, 100]} unit="%" tick={{ fontSize: 11, fill: '#8a9099' }} width={46} />
+              <YAxis domain={[50, 100]} unit="%" tick={{ fontSize: 11, fill: '#8a9099' }} width={54} />
               <Tooltip
                 content={
                   <ChartTooltip
@@ -143,10 +143,10 @@ export default function QualitySection({
           }
         >
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={durData} margin={{ top: 8, right: 12, left: -14, bottom: 0 }}>
+            <ComposedChart data={durData} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#eef0f3" vertical={false} />
               <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#8a9099' }} minTickGap={16} />
-              <YAxis unit="s" tick={{ fontSize: 11, fill: '#8a9099' }} width={46} />
+              <YAxis unit="s" tick={{ fontSize: 11, fill: '#8a9099' }} width={54} />
               <Tooltip
                 content={
                   <ChartTooltip
@@ -183,11 +183,11 @@ export default function QualitySection({
             <BarChart
               data={failureRows}
               layout="vertical"
-              margin={{ top: 4, right: 40, left: 8, bottom: 0 }}
+              margin={{ top: 4, right: 16, left: 0, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#eef0f3" horizontal={false} />
               <XAxis type="number" tick={{ fontSize: 11, fill: '#8a9099' }} />
-              <YAxis type="category" dataKey="label" tick={{ fontSize: 11, fill: '#646a73' }} width={86} />
+              <YAxis type="category" dataKey="label" tick={{ fontSize: 11, fill: '#646a73' }} width={112} />
               <Tooltip content={<ChartTooltip valueFormatter={(v) => (v === null ? '—' : `${Math.round(v)} 次`)} />} />
               <Bar dataKey="value" name="失败次数" radius={[0, 4, 4, 0]} fill={COLORS.danger}>
                 {failureRows.map((r, i) => (
@@ -238,10 +238,10 @@ export default function QualitySection({
           height={240}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={rejectRows} layout="vertical" margin={{ top: 4, right: 40, left: 8, bottom: 0 }}>
+            <BarChart data={rejectRows} layout="vertical" margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#eef0f3" horizontal={false} />
               <XAxis type="number" tick={{ fontSize: 11, fill: '#8a9099' }} />
-              <YAxis type="category" dataKey="label" tick={{ fontSize: 11, fill: '#646a73' }} width={86} />
+              <YAxis type="category" dataKey="label" tick={{ fontSize: 11, fill: '#646a73' }} width={112} />
               <Tooltip content={<ChartTooltip valueFormatter={(v) => (v === null ? '—' : `${Math.round(v)} 条`)} />} />
               <Bar dataKey="value" name="拒绝条数" radius={[0, 4, 4, 0]}>
                 {rejectRows.map((r, i) => (
@@ -260,9 +260,8 @@ export default function QualitySection({
               <ShieldAlert size={14} /> 按创作风格的审核拒绝率
             </h3>
             <p className="card-sub">
-              用于判断拒绝是集中在某个风格（模板 / 提示词问题）还是全域误杀；阈值{' '}
-              {fmtPct(THRESHOLDS.rejectRateMax, 0)}。「相对当日大盘偏离」已剔除「该点位当天整体审核变严」
-              这类日级效应，只保留风格自身差异，因此长区间被平均后仍能看出集中度。
+              用于判断拒绝是集中在某个风格（模板 / 提示词问题）还是全域误杀；阈值 {fmtPct(THRESHOLDS.rejectRateMax, 0)}。
+              「相对当日大盘偏离」已剔除「该点位当天整体审核变严」这类日级效应，只保留风格自身差异，因此长区间被平均后仍能看出集中度。
             </p>
           </div>
           <span className="badge gray">
@@ -274,8 +273,8 @@ export default function QualitySection({
             <div className="callout info">
               <Zap size={13} />
               <span>
-                当前点位范围为「全部点位」，单个点位某个风格的集中拒绝会被其他点位稀释。
-                若某条 R3 异常提示拒绝集中在某风格，请把点位切换到该点位后再看本表，差异会更明显。
+                <div>当前点位范围为「全部点位」，单个点位某个风格的集中拒绝会被其他点位稀释。</div>
+                <div>若某条 R3 异常提示拒绝集中在某风格，请把点位切换到该点位后再看本表，差异会更明显。</div>
               </span>
             </div>
           </div>
@@ -338,10 +337,7 @@ export default function QualitySection({
 
       <div className="card" style={{ marginTop: 12 }}>
         <div className="card-body" style={{ fontSize: 12.5, color: 'var(--c-text-sub)' }}>
-          <strong>口径边界提醒：</strong>生成失败（模型超时、服务异常、参数异常、输入图像质量）
-          由技术链路决定，应派单给技术运维；审核拒绝（违规图像、敏感内容、肖像版权风险）
-          由内容治理策略决定，应反馈给审核策略与运营选品。两者的分母、归因与责任人不同，
-          不应合并为「内容没出来」这一类口径。
+          <strong>口径边界提醒：</strong>生成失败（模型超时、服务异常、参数异常、输入图像质量）由技术链路决定，应派单给技术运维；审核拒绝（违规图像、敏感内容、肖像版权风险）由内容治理策略决定，应反馈给审核策略与运营选品。两者的分母、归因与责任人不同，不应合并为「内容没出来」这一类口径。
         </div>
       </div>
     </div>

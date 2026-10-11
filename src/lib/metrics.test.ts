@@ -320,6 +320,22 @@ describe('设备在线状态', () => {
     expect(oldStatuses.find((s) => s.device.id === 'DEV-10')?.online).toBe(false);
   });
 
+  it('近 7 日心跳在线率：应到心跳数不为 0，比率在 (0,1] 区间（回归：曾因日期计算错误恒为 0）', () => {
+    for (const st of statuses) {
+      expect(st.expectedBeats7d).toBeGreaterThan(0);
+      expect(st.heartbeatRate7d).not.toBeNull();
+      expect(st.heartbeatRate7d!).toBeGreaterThan(0);
+      expect(st.heartbeatRate7d!).toBeLessThanOrEqual(1);
+      expect(st.actualBeats7d).toBeLessThanOrEqual(st.expectedBeats7d);
+    }
+    // 在线设备应接近 100%，长时间离线的设备应明显更低
+    const byId = new Map(statuses.map((s) => [s.device.id, s]));
+    expect(byId.get('DEV-01')!.heartbeatRate7d!).toBeCloseTo(1, 4);
+    expect(byId.get('DEV-10')!.heartbeatRate7d!).toBeLessThan(
+      byId.get('DEV-01')!.heartbeatRate7d!,
+    );
+  });
+
   it('DEV-03 存在心跳中断记录（2026-10-02 下午）', () => {
     const st = statuses.find((s) => s.device.id === 'DEV-03');
     expect(st).toBeTruthy();

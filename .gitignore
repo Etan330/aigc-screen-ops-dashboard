@@ -6,3 +6,6 @@ dist/
 
 # 本地工作记忆，不纳入公开仓库
 .workbuddy/
+
+# PDF 生成脚本的中间产物（由 scripts/build_pdf.mjs 自动重建，无需入库）
+docs/*-print.html
