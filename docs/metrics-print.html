@@ -2,45 +2,48 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
-<title>AIGC 互动大屏运营看板 · 指标口径说明</title>
+<title>METRICS</title>
 <style>
-  @page { size: A4 portrait; margin: 9mm 8mm 8mm 8mm; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
     font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
     color: #1f2329;
-    font-size: 7.6pt;
-    line-height: 1.34;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  h1 { font-size: 13.6pt; margin: 0 0 3pt; letter-spacing: .2px; }
   h2 {
-    font-size: 9.2pt; margin: 6.5pt 0 3pt; padding: 2pt 5pt;
-    background: #eef2fd; border-left: 2.4pt solid #2f5be3; color: #1b3aab;
+    padding: 2pt 5pt; background: #eef2fd; border-left: 2.4pt solid #2f5be3; color: #1b3aab;
   }
-  h3 { font-size: 8.3pt; margin: 5pt 0 3pt; }
   p { margin: 2.4pt 0; }
-  strong { color: #1f2329; }
   code {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 7.0pt; background: #f2f4f7; padding: 0 1.5pt; border-radius: 2pt;
+    background: #f2f4f7; padding: 0 1.5pt; border-radius: 2pt;
   }
-  table {
-    width: 100%; border-collapse: collapse; margin: 2.5pt 0 0;
-    table-layout: fixed;
-  }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
   th {
     background: #f4f6fa; color: #48505a; font-weight: 600;
-    text-align: left; padding: 3pt 3.6pt; border: 0.5pt solid #d9dee5;
+    text-align: left; border: 0.5pt solid #d9dee5;
   }
-  td {
-    padding: 3pt 3.6pt; border: 0.5pt solid #e3e7ec; vertical-align: top;
-  }
+  td { border: 0.5pt solid #e3e7ec; vertical-align: top; }
   tbody tr:nth-child(even) td { background: #fbfcfd; }
-  ol { margin: 2.5pt 0 0; padding-left: 12pt; }
+  ol { margin: 2.5pt 0 0; padding-left: 13pt; }
   li { margin-bottom: 1.6pt; }
+  blockquote {
+    margin: 3pt 0; padding: 3pt 6pt; background: #fbfcfd;
+    border-left: 2pt solid #d3d8de; color: #48505a;
+  }
+  hr { border: none; border-top: 0.6pt solid #e3e7ec; margin: 6pt 0; }
+
+  @page { size: A4 portrait; margin: 9mm 8mm 8mm 8mm; }
+  body { font-size: 7.6pt; line-height: 1.34; }
+  h1 { font-size: 13.6pt; margin: 0 0 3pt; letter-spacing: .2px; }
+  h2 { font-size: 9.2pt; margin: 6.5pt 0 3pt; }
+  h3 { font-size: 8.3pt; margin: 5pt 0 3pt; }
+  code { font-size: 7.0pt; }
+  table { margin: 2.5pt 0 0; }
+  th { padding: 3pt 3.6pt; }
+  td { padding: 3pt 3.6pt; }
   table th:nth-child(1), table td:nth-child(1) { font-weight: 600; }
   table#metrics th:nth-child(1), table#metrics td:nth-child(1) { width: 10.5%; }
   table#metrics th:nth-child(2), table#metrics td:nth-child(2) { width: 19%; }

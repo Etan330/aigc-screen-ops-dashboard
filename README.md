@@ -124,7 +124,7 @@
 
 ## 四、指标口径
 
-7 项核心指标的定义、分子分母、去重规则、运营意义与对应的运营动作，见 **[METRICS.md](METRICS.md)**（同时提供一页版 `METRICS.pdf`）。
+7 项核心指标的定义、分子分母、去重规则、运营意义与对应的运营动作，见 **[METRICS.md](METRICS.md)**；一页版见 **[METRICS.pdf](METRICS.pdf)**（A4 单页，由 `scripts/build_pdf.mjs` 从 METRICS.md 生成，可直接打印或提交）。
 
 所有指标都从同一套事件级原始数据派生，任何图表、卡片、详情页都不写死结果，因此不会出现「同一指标在不同页面数值不一致」的情况。
 
@@ -197,9 +197,12 @@ npm run typecheck  # 仅类型检查
 ```
 .
 ├── README.md / METRICS.md / AI_USAGE.md   作品说明、指标口径、AI 工具使用说明
+├── METRICS.pdf / AI_USAGE.pdf             上述两份文档的 PDF 版本
+├── DEPLOYMENT.md                          部署方式与实际验证记录
 ├── docs/screenshots/                      README 展示用截图
 ├── .github/workflows/deploy.yml           GitHub Actions：自动构建并部署到 GitHub Pages
 ├── scripts/generate_mock_data.py          模拟数据生成脚本（固定种子）
+├── scripts/build_pdf.mjs                  把 Markdown 渲染成 PDF（指标说明的一页版式由它生成）
 ├── public/data/                           模拟数据（前端运行时读取）
 └── src/
     ├── types.ts                           数据模型与 ID 关联关系
